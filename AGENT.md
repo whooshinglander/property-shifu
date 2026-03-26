@@ -676,29 +676,177 @@ print("\nShifu ready.")
 
 ---
 
-## Singapore Data Sources (all free)
+## Singapore Data Sources — What to Scrape and How
 
-| Data | Source | URL | Format |
-|---|---|---|---|
-| Private property price index (PPI) | URA REALIS | ura.gov.sg/reis/dataBrowse | CSV export |
-| Private transaction volume | URA REALIS | ura.gov.sg/reis/dataBrowse | CSV export |
-| Median PSF by district | URA REALIS | ura.gov.sg/reis/dataBrowse | CSV export |
-| HDB resale price index | data.gov.sg | data.gov.sg/dataset/hdb-resale-price-index | CSV |
-| HDB resale flat prices (individual) | data.gov.sg | data.gov.sg/dataset/resale-flat-prices | CSV |
-| SORA (mortgage rate proxy) | MAS | mas.gov.sg/monetary-policy/sora | CSV |
-| Singapore CPI | data.gov.sg | data.gov.sg/dataset/consumer-price-index | CSV |
-| Rental index | URA REALIS | ura.gov.sg/reis/dataBrowse | CSV export |
-| New private home sales | URA | ura.gov.sg/Corporate/Media-Room/Media-Releases | Monthly PDF |
+All sources below are free. Build scrapers for each. Priority order: URA API first (structured, real-time), data.gov.sg second (bulk historical), MAS third (rates).
 
-**URA API registration (free):** https://www.ura.gov.sg/maps/api/
-Once registered, use the REST API to pull data programmatically instead of manual CSV exports.
+---
 
-**Key URA API endpoints:**
-- `PMI_Resi_Transaction` — private residential transactions
-- `PMI_Resi_Rental_Median` — rental median prices
-- Private property price index — available via REALIS CSV only
+### Source 1 — URA API (primary, real-time)
+**Register free:** https://www.ura.gov.sg/maps/api/
+**Dev portal:** https://www.developer.tech.gov.sg/products/categories/data-and-apis/ura-apis/overview
 
-**Recommended history depth:** 2000-present for private, 1990-present for HDB (covers Asian Financial Crisis, SARS, GFC, COVID cycles).
+Once registered you get an access key. All endpoints return JSON.
+
+| Endpoint | What it returns | Use for |
+|---|---|---|
+| `PMI_Resi_Transaction` | Individual private property transactions (address, PSF, price, date, type) | Comparable transactions, PSF by development |
+| `PMI_Resi_Rental_Median` | Median rental prices by district and flat type | Rental yield computation |
+| `PMI_Resi_Rental_Contract` | Individual rental contracts | Granular rental data |
+| `PMI_Resi_Launch` | New launch data (units launched, sold) | Supply pipeline |
+| `PMI_Resi_Sold` | Units sold by project | Absorption rate |
+
+**Sample scraper:**
+```python
+import requests, json
+
+ACCESS_KEY = "your_ura_access_key"
+TOKEN_URL  = "https://www.ura.gov.sg/uraDataService/insertNewToken.action"
+DATA_URL   = "https://www.ura.gov.sg/uraDataService/invokeUraDS"
+
+def get_token():
+    r = requests.get(TOKEN_URL, headers={"AccessKey": ACCESS_KEY})
+    return r.json()["Result"]
+
+def get_transactions(token, batch=1):
+    """Fetch private residential transactions. Paginated — batch 1-4."""
+    params = {
+        "service":  "PMI_Resi_Transaction",
+        "batch":    str(batch),
+    }
+    r = requests.get(DATA_URL, headers={"AccessKey": ACCESS_KEY, "Token": token}, params=params)
+    return r.json()
+
+token = get_token()
+data  = get_transactions(token, batch=1)
+# data["Result"] = list of transactions with: project, street, x, y, area, floorRange,
+#                  noOfUnits, contractDate, typeOfSale, price, propertyType, district,
+#                  typeOfArea, tenure, psf, marketSegment
+```
+
+**Important:** token expires after each call. Request a new token for each API call. Rate limit: be polite, don't hammer. Fetch once daily and cache locally.
+
+---
+
+### Source 2 — data.gov.sg (bulk historical, no API key needed)
+**Base URL:** https://data.gov.sg/api/action/datastore_search
+
+| Dataset | Dataset ID | What it contains |
+|---|---|---|
+| HDB resale flat prices | `d_8b84c4ee58e3cfc0ece0d773c8ca6abc` | Every HDB resale transaction since 1990 |
+| HDB resale price index | `d_b5a9ae32a0e9523249ce4afb0fc5e617` | Quarterly HDB resale price index |
+| Private residential transactions (CCR) | `d_5785799d63a9da091f4e0b456291eeb8` | Quarterly CCR data |
+| Private residential transactions (RCR) | Similar ID — search data.gov.sg | Quarterly RCR data |
+| Private residential transactions (OCR) | Similar ID — search data.gov.sg | Quarterly OCR data |
+| Consumer Price Index (SG CPI) | search "consumer price index" on data.gov.sg | Monthly CPI |
+
+**Sample scraper:**
+```python
+import requests, pandas as pd
+
+def fetch_datagov(dataset_id, limit=10000):
+    url = f"https://data.gov.sg/api/action/datastore_search"
+    params = {"resource_id": dataset_id, "limit": limit}
+    r = requests.get(url, params=params)
+    records = r.json()["result"]["records"]
+    return pd.DataFrame(records)
+
+# HDB resale prices
+hdb = fetch_datagov("d_8b84c4ee58e3cfc0ece0d773c8ca6abc")
+# Columns: month, town, flat_type, block, street_name, storey_range,
+#          floor_area_sqm, flat_model, lease_commence_date, remaining_lease, resale_price
+
+# For full history (>10k records), paginate:
+def fetch_all(dataset_id, page_size=10000):
+    offset, records = 0, []
+    while True:
+        url = "https://data.gov.sg/api/action/datastore_search"
+        r = requests.get(url, params={"resource_id": dataset_id, "limit": page_size, "offset": offset})
+        batch = r.json()["result"]["records"]
+        if not batch: break
+        records.extend(batch)
+        offset += page_size
+    return pd.DataFrame(records)
+```
+
+---
+
+### Source 3 — MAS (SORA and interest rates)
+**SORA daily rates:** https://eservices.mas.gov.sg/statistics/dir/DomesticInterestRates.aspx
+**Direct CSV download:** https://eservices.mas.gov.sg/statistics/msb/export.xlsx?tableproduct=I.1
+
+| Series | What it is | Use for |
+|---|---|---|
+| 3-month compounded SORA | Benchmark rate for most SG home loans | Mortgage rate proxy |
+| SOR (deprecated 2023) | Old benchmark | Historical data pre-2023 |
+| Prime lending rate | Major bank prime rate | Alternative mortgage proxy |
+
+**Sample scraper:**
+```python
+import requests, pandas as pd, io
+
+def fetch_sora():
+    # MAS publishes SORA via their statistics API
+    url = "https://eservices.mas.gov.sg/statistics/api/v1/bondsandbills/m/averageinterestrates"
+    r = requests.get(url, params={"rows": 200, "from": "2019-01-01"})
+    data = r.json()["result"]["records"]
+    df = pd.DataFrame(data)
+    return df
+```
+
+---
+
+### Source 4 — SRX / 99.co (rental yield, days on market)
+SRX and 99.co publish monthly rental and transaction data. Not a formal API but scrapeable via their public pages.
+
+**99.co rental data:** https://www.99.co/singapore/research — export via browser, or use their published monthly reports.
+
+**Alternative:** use URA `PMI_Resi_Rental_Median` API endpoint (Source 1) for rental data — cleaner and official.
+
+---
+
+### Source 5 — Government press releases (population, policy signals)
+Not structured data — parse these for policy context that Shifu uses in its market narrative.
+
+| Source | URL | What to extract |
+|---|---|---|
+| MND press releases | mnd.gov.sg/newsroom | Minister statements on housing supply, ABSD |
+| URA quarterly releases | ura.gov.sg/Corporate/Media-Room/Media-Releases | Official PPI releases with commentary |
+| MTI economic surveys | mti.gov.sg | GDP forecasts, population projections |
+| DPM/Minister speeches | pmo.gov.sg/Newsroom | Population policy, housing demand signals |
+
+**Scraper approach:** use `requests` + `BeautifulSoup` to scrape latest releases. Parse for keywords: "ABSD", "cooling measures", "BTO", "population", "supply". Store as text in `SHIFU.md` context section — Shifu reads these as qualitative signals.
+
+**Key quotes already in Shifu's context (as of March 2026):**
+- DPM Gan Kim Yong (COS debate, Feb 2026): citizen population growth slowing to 0.7%/yr
+- Minister Chee Hong Tat: 55,000 BTO flats to be launched 2025-2027
+- URA Q4 2025 release: PPI +3.4% full year 2025 (slowest since 2020), 9,185 GLS units H1 2026
+
+---
+
+### Scraping schedule (recommended cron)
+| Source | Frequency | What changes |
+|---|---|---|
+| URA API transactions | Weekly (Sunday) | New transactions filed |
+| data.gov.sg HDB | Monthly (1st) | New monthly resale data |
+| MAS SORA | Daily | Rate changes |
+| URA quarterly PPI | Quarterly (Jan/Apr/Jul/Oct) | Price index update |
+| Government press releases | Weekly | Policy signals |
+
+---
+
+### Local storage after scraping
+```
+hat/
+  data/
+    ura_transactions.parquet    ← all private transactions, append-only
+    hdb_resale.parquet          ← all HDB resale transactions
+    price_index.csv             ← quarterly PPI (URA + HDB)
+    sora.csv                    ← daily SORA rates
+    press_releases.jsonl        ← one JSON object per release, append-only
+```
+
+All scraped data feeds into `history.parquet` via `fetch_history.py`.
 
 ---
 
