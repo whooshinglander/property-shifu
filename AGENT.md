@@ -193,7 +193,7 @@ hat/
     history.parquet         ← auto-generated
     snapshot.json           ← auto-generated, update monthly
     analogs.json            ← auto-generated output
-    HAT.md                  ← accumulated insight, human-readable
+    SHIFU.md                  ← accumulated insight, human-readable
     fetch_history.py        ← run once + weekly refresh
     snapshot.py             ← run monthly with fresh market data
     match.py                ← run anytime to find analogs
@@ -515,13 +515,13 @@ if not os.path.exists(SNAPSHOT):
 import match
 output = match.find_analogs(top_n=5)
 
-# Read HAT.md for context
-hat_md = os.path.join(SCRIPT_DIR, "HAT.md")
+# Read SHIFU.md for context
+hat_md = os.path.join(SCRIPT_DIR, "SHIFU.md")
 if os.path.exists(hat_md):
     print(f"\nHAT memory: {hat_md}")
-    print("Read HAT.md for accumulated market insight before interpreting analogs.")
+    print("Read SHIFU.md for accumulated market insight before interpreting analogs.")
 
-print("\nHAT ready.")
+print("\nShifu ready.")
 ```
 
 ---
@@ -552,12 +552,12 @@ Once registered, use the REST API to pull data programmatically instead of manua
 
 ---
 
-## HAT.md — Singapore Seed Template
+## SHIFU.md — Singapore Seed Template
 
-Create `hat/HAT.md` with this content and expand over time:
+Create `hat/SHIFU.md` with this content and expand over time:
 
 ```markdown
-# HAT — Singapore Property Market
+# SHIFU — Singapore Property Market
 _Heuristic Anchored Thinking. Read before any market timing discussion._
 
 ## Market

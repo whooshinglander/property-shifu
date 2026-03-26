@@ -1,107 +1,100 @@
-# Property HAT
-### A market timing tool for Singapore property brokers
+# Shifu
+### Your AI property advisor. Built for Singapore brokers.
 
-HAT stands for **Heuristic Anchored Thinking**.
+Shifu knows two things:
 
-It does one thing: loads 20+ years of Singapore property data, finds the historical periods that looked most like today, and tells you what happened to prices next.
-
----
-
-## What it actually does
-
-You tell it the current market conditions:
-- Mortgage rate: 3.5%
-- Prices up 4% year-on-year
-- Transaction volume down 8%
-- Average days on market: 32
-
-It searches through every quarter from 2000 to today, finds the ones that looked most similar, and shows you what happened in the 6 and 12 months that followed.
+1. **Your listings** — ask it anything about any property in your portfolio
+2. **The market** — ask it whether now is a good time to buy, sell, or wait
 
 ---
 
-## Example output
+## What Shifu can do
+
+**About your listings:**
+> *"Does The Riverina allow pets?"*
+> *"What's the maintenance fee at Grandeur 8?"*
+> *"Show me all 3-bedroom units under $2.5M in D20"*
+
+Shifu reads all your brochures, factsheets, and listing documents — and answers instantly.
+
+---
+
+**About the market:**
+> *"Is D15 a good buy right now?"*
+> *"How does this market compare to 2018?"*
+> *"Volume is down but prices are flat — what does history say?"*
+
+Shifu loads 20+ years of URA and HDB data, finds the historical periods that looked most like today, and tells you what happened to prices in the 6 and 12 months that followed.
+
+---
+
+## Example
+
+You ask: *"D14 prices are up 5% this year but volume is dropping. Should my client buy now or wait?"*
+
+Shifu answers:
 
 ```
-HAT — Singapore Private Residential | March 2026
+Shifu — Singapore Property | March 2026
 
-Current conditions:
-  Mortgage rate: 3.5% | Prices YoY: +4.2% | Volume YoY: -8.5%
-  Days on market: 32 | Absorption rate: 0.68
+Current conditions match 3 historical periods:
 
-Top 3 historical matches:
+  #1 | Q3 2018  [94% match]
+     Prices +5.1% YoY, volume -12%, mortgage 2.1%
+     → What happened: prices drifted -3.8% over the next 12 months
+     → Context: ABSD hike followed 3 months later
 
-  #1 | Q3 2018  [similarity: 94%]
-       Mortgage: 2.1% | Prices: +5.1% | Volume: -12% | DOM: 35
-       → Prices 6 months later:  -2.1%
-       → Prices 12 months later: -3.8%
+  #2 | Q2 2014  [89% match]  
+     Prices +3.8% YoY, volume -9%, mortgage 1.8%
+     → What happened: prices flat at +0.4% over 12 months
+     → Context: cooling measures already in place, market found floor
 
-  #2 | Q2 2014  [similarity: 89%]
-       Mortgage: 1.8% | Prices: +3.8% | Volume: -9% | DOM: 30
-       → Prices 6 months later:  -1.5%
-       → Prices 12 months later: +0.4%
+  #3 | Q1 2011  [85% match]
+     Prices +4.5% YoY, volume -6%, mortgage 1.5%
+     → What happened: prices continued +6.1% over 12 months
+     → Context: pre-ABSD, upgrader demand still strong
 
-  #3 | Q1 2011  [similarity: 85%]
-       Mortgage: 1.5% | Prices: +4.5% | Volume: -6% | DOM: 28
-       → Prices 6 months later:  +3.2%
-       → Prices 12 months later: +6.1%
+2 out of 3 matches suggest caution. 1 suggests continued growth.
+Key variable: whether another cooling measure is coming.
 ```
 
-Two out of three matches showed prices softening. One showed continued growth. You decide what to do with that — but now you're deciding with data, not gut feel.
+You decide what to advise. But now you're advising with data, not gut feel.
 
 ---
 
-## What it is not
+## What you need to set up Shifu
 
-- It does not predict the future
-- It does not give financial advice
-- It does not replace your judgment
+**For listing knowledge:**
+- Your property brochures and factsheets (PDF)
+- Drop them in a folder — Shifu reads them all
 
-It gives you historical context. What you do with that context is still your call.
-
----
-
-## What you need to prepare
-
-**One CSV file** with Singapore property market history. Sources (all free):
-
-| Data | Where to get it |
-|---|---|
-| URA Private Property Price Index | ura.gov.sg/reis/dataBrowse → export CSV |
-| Transaction volume | Same URA REALIS page |
-| HDB Resale Price Index | data.gov.sg/dataset/hdb-resale-price-index |
-| SORA (mortgage rate) | mas.gov.sg/monetary-policy/sora |
-
-You don't need all of them to start. URA price index + transaction volume is enough for a first version.
+**For market analysis:**
+- URA price index data (free at ura.gov.sg/reis)
+- HDB resale data (free at data.gov.sg)
+- Your developer will handle the rest
 
 ---
 
-## What your developer needs
+## Getting started
 
-Hand them `AGENT.md` in this repo. It has all the code and instructions.
+Send this repo to your developer or AI agent. The file `AGENT.md` has everything they need.
 
-You just need to:
-1. Download the CSV files above
-2. Send them to your developer with `AGENT.md`
-3. Update the current market numbers monthly (takes 5 minutes)
+You don't need to understand the code. You just need to:
+1. Collect your listing PDFs
+2. Download the URA/HDB data files
+3. Hand both to your developer with `AGENT.md`
 
----
-
-## The HAT memory file
-
-After each time you use it, your developer (or AI agent) adds notes to a file called `HAT.md`. This is where the tool accumulates knowledge over time.
-
-For example, after a discussion about cooling measures:
-
-```
-March 2026 — ABSD at 60% for foreigners, TDSR 55%.
-Volume down 8% YoY but prices holding. 
-Closest analog: Q3 2018 (post-ABSD hike). 
-2018 saw prices drift -4% over 18 months before recovering.
-Key difference today: supply pipeline much tighter than 2018.
-```
-
-Next time you ask a question, it reads this first. The tool gets smarter with every conversation.
+Once set up, you talk to Shifu. That's it.
 
 ---
 
-*Built on open-source Python. Free to run. Data from URA, HDB, MAS.*
+## The Shifu memory file
+
+After each conversation, Shifu's memory file (`SHIFU.md`) is updated with what was discussed and what the data showed. Next time you ask, Shifu already knows the context.
+
+Over time, Shifu gets smarter about your specific market, your typical client profile, and the patterns you've noticed in your own deals.
+
+---
+
+*Built on open-source tools. Singapore data. Free to run.*
+*Inspired by PropertyLimBrothers' formula: data + story + personal brand.*
