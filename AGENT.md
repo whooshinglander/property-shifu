@@ -1,6 +1,12 @@
 # AGENT.md — Build Instructions for Property AI Toolkit
+### Singapore market. Non-technical broker. Build both tools end-to-end.
 
-These are complete instructions for building both tools. The end user is a non-technical property broker. Your job is to make both tools work with minimal friction on their end.
+These are complete instructions for building both tools. The end user is a non-technical Singapore property broker. Your job is to make both tools work with minimal friction on their end.
+
+**Default market:** Singapore private residential + HDB resale.
+**Default data sources:** URA REALIS, data.gov.sg, MAS SORA.
+**Default language:** English.
+**CEA compliance note:** this tool provides data-driven analysis only — it does not give regulated financial or property advice. The broker remains responsible for all client recommendations.
 
 ---
 
@@ -225,16 +231,32 @@ OUTPUT_PATH = os.path.join(SCRIPT_DIR, "history.parquet")
 START = "2000-01-01"
 
 FRED_SERIES = {
-    "MORTGAGE30US": "mortgage_rate",       # US 30Y mortgage — replace for SG/MY
-    "CPIAUCSL":     "cpi",
-    "UNRATE":       "unemployment",
-    "DFF":          "policy_rate",
+    # Singapore doesn't have FRED series — use local data sources below.
+    # For reference / global context only:
+    "DFF":      "fed_funds_rate",   # US Fed rate — affects SG via USD/SGD and capital flows
+    "CPIAUCSL": "us_cpi",
 }
 
-# Singapore-specific: replace MORTGAGE30US with SORA or bank prime rate CSV
-# Malaysia-specific: replace with BNM OPR data
-# URA quarterly price index: https://www.ura.gov.sg/reis/dataBrowse (export to CSV)
-# HDB resale: https://data.gov.sg/dataset/resale-flat-prices (export to CSV)
+# ── Singapore data sources (free) ────────────────────────────────────────────
+# 1. URA Private Property Price Index (quarterly)
+#    Register free: https://www.ura.gov.sg/maps/api/
+#    Download: https://www.ura.gov.sg/reis/dataBrowse → Property Price Index → CSV
+#    Columns needed: quarter, price_index, transaction_volume, median_psf
+
+# 2. HDB Resale Price Index (quarterly)
+#    Direct download: https://data.gov.sg/dataset/hdb-resale-price-index
+#    Columns needed: quarter, index
+
+# 3. HDB Resale Flat Prices (individual transactions, monthly)
+#    Direct download: https://data.gov.sg/dataset/resale-flat-prices
+#    Use this to derive volume and median prices
+
+# 4. SORA (Singapore Overnight Rate Average) — mortgage rate proxy
+#    MAS website: https://www.mas.gov.sg/monetary-policy/sora
+#    Or use SOR/SIBOR historical data from MAS
+
+# 5. Mortgage rate (3M SORA + bank spread, typically 3M SORA + 0.8-1.0%)
+#    Approximate: use 3M compounded SORA + 0.9% as prevailing home loan rate
 
 def fetch_fred(series_id, alias):
     url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
@@ -313,21 +335,22 @@ OUTPUT_PATH = os.path.join(SCRIPT_DIR, "snapshot.json")
 def capture():
     snapshot = {
         "as_of": datetime.today().strftime("%Y-%m"),
-        "market": "Singapore — Edit this",
+        "market": "Singapore Private Residential",
         "conditions": {
-            "mortgage_rate":           3.5,    # % — current home loan rate
-            "price_index_yoy":         4.2,    # % — YoY price change
-            "transaction_volume_yoy": -8.5,    # % — YoY volume change
-            "days_on_market":         32,       # days
-            "absorption_rate":         0.68,   # 0-1, sold/new listings
-            "price_to_income":         14.2,   # median price / median annual income
+            "mortgage_rate":           3.5,    # % — prevailing 3M SORA + spread (check MAS)
+            "price_index_yoy":         4.2,    # % — URA PPI YoY change (check URA REALIS)
+            "transaction_volume_yoy": -8.5,    # % — URA transaction volume YoY
+            "days_on_market":         32,       # days — check PropNex/ERA monthly report
+            "absorption_rate":         0.68,   # sold units / new launches (0-1)
+            "price_to_income":         14.2,   # median condo price / median household income
         },
         "context": {
-            # Free text. Describe anything the numbers don't capture.
-            "cooling_measures": "ABSD at 60% for foreigners",
-            "supply_pipeline": "3,200 units launching Q3 2026",
-            "demand_drivers": "HDB upgraders active, en bloc proceeds in market",
-            "notes": ""
+            "cooling_measures":   "ABSD: SC 20%, PR 30%, foreigner 60%. TDSR 55%.",
+            "supply_pipeline":    "Edit: units launching next 12 months",
+            "demand_drivers":     "Edit: e.g. HDB upgraders active, en bloc proceeds in market",
+            "hdb_upgrader_cycle": "Edit: BTO completions driving upgrader demand?",
+            "rental_yield":       "Edit: gross rental yield % vs mortgage rate %",
+            "notes":              ""
         }
     }
 
@@ -503,66 +526,74 @@ print("\nHAT ready.")
 
 ---
 
-## Data Sources by Market
+## Singapore Data Sources (all free)
 
-### Singapore
-| Data | Source | Format |
-|---|---|---|
-| Private property price index | URA REALIS (ura.gov.sg/reis) | CSV export |
-| HDB resale prices | data.gov.sg/dataset/resale-flat-prices | CSV |
-| Transaction volume | URA REALIS | CSV |
-| SORA (mortgage proxy) | MAS website | CSV |
-| Rental index | URA REALIS | CSV |
+| Data | Source | URL | Format |
+|---|---|---|---|
+| Private property price index (PPI) | URA REALIS | ura.gov.sg/reis/dataBrowse | CSV export |
+| Private transaction volume | URA REALIS | ura.gov.sg/reis/dataBrowse | CSV export |
+| Median PSF by district | URA REALIS | ura.gov.sg/reis/dataBrowse | CSV export |
+| HDB resale price index | data.gov.sg | data.gov.sg/dataset/hdb-resale-price-index | CSV |
+| HDB resale flat prices (individual) | data.gov.sg | data.gov.sg/dataset/resale-flat-prices | CSV |
+| SORA (mortgage rate proxy) | MAS | mas.gov.sg/monetary-policy/sora | CSV |
+| Singapore CPI | data.gov.sg | data.gov.sg/dataset/consumer-price-index | CSV |
+| Rental index | URA REALIS | ura.gov.sg/reis/dataBrowse | CSV export |
+| New private home sales | URA | ura.gov.sg/Corporate/Media-Room/Media-Releases | Monthly PDF |
 
-Register for free URA API access at: https://www.ura.gov.sg/maps/api/
+**URA API registration (free):** https://www.ura.gov.sg/maps/api/
+Once registered, use the REST API to pull data programmatically instead of manual CSV exports.
 
-### Malaysia
-| Data | Source |
-|---|---|
-| House Price Index | NAPIC (napic.jpph.gov.my) |
-| Transaction volume | NAPIC |
-| OPR (mortgage proxy) | BNM (bnm.gov.my/monetary-stability) |
+**Key URA API endpoints:**
+- `PMI_Resi_Transaction` — private residential transactions
+- `PMI_Resi_Rental_Median` — rental median prices
+- Private property price index — available via REALIS CSV only
 
-### Universal (FRED — free, no key)
-| Series | What it is |
-|---|---|
-| MORTGAGE30US | US 30Y mortgage rate |
-| DFF | Fed funds rate |
-| CPIAUCSL | US CPI |
-| UNRATE | US unemployment |
+**Recommended history depth:** 2000-present for private, 1990-present for HDB (covers Asian Financial Crisis, SARS, GFC, COVID cycles).
 
 ---
 
-## HAT.md — Seed Template
+## HAT.md — Singapore Seed Template
 
 Create `hat/HAT.md` with this content and expand over time:
 
 ```markdown
-# HAT — Property Market
+# HAT — Singapore Property Market
 _Heuristic Anchored Thinking. Read before any market timing discussion._
 
 ## Market
-[e.g. Singapore private residential, District 9-15]
+Singapore private residential + HDB resale.
 
 ## Core matching features
-1. Mortgage rate
-2. Price index YoY
-3. Transaction volume YoY
-4. Days on market
-5. Absorption rate
+1. `mortgage_rate` — prevailing 3M SORA + bank spread
+2. `price_index_yoy` — URA PPI YoY % change
+3. `transaction_volume_yoy` — URA volume YoY % change
+4. `days_on_market` — average days to sell
+5. `absorption_rate` — units sold / new launches
 
 ## Context features (pull on demand)
-- Active cooling measures
-- Developer launch pipeline (units in next 12m)
-- Foreign buyer activity
-- HDB upgrader cycle (SG)
-- Rental yield vs mortgage rate spread
+- Active cooling measures (ABSD rates, TDSR, LTV limits)
+- Developer launch pipeline (units launching next 12 months)
+- Foreign buyer activity (% of transactions)
+- HDB upgrader cycle (BTO completions → upgrader demand 5-7 years later)
+- Rental yield vs mortgage rate spread (positive = yield > cost = buy signal)
+- En bloc cycle (proceeds re-entering market as buying power)
 
-## Key frameworks
-- **Affordability ceiling:** buyers exit when monthly repayment > 30-35% gross income
-- **Supply lag:** en bloc/new launches take 3-5 years to hit market
-- **Cooling measure cycle (SG):** government intervenes when prices rise >8% YoY, relaxes when volume drops >30%
-- **Interest rate sensitivity:** every 1% rate rise reduces max loan quantum ~10%
+## Singapore-specific frameworks
+- **Cooling measure cycle:** government intervenes when prices rise >8% YoY (ABSD hikes), relaxes when volume drops >30% for 2+ quarters
+- **Supply lag:** new launches take 3-5 years to complete. Today's en bloc = supply in 2028-2030.
+- **HDB upgrader cycle:** BTO completions peak → MOP reached 5 years later → upgrader wave hits private market. Predictable, 5-year lead time.
+- **TDSR 55% ceiling:** hard affordability cap. At current SORA + spread, calculate the income needed to service median-priced unit. When that exceeds median household income, demand structurally limited.
+- **Foreign demand signal:** when ABSD for foreigners is 60%, any foreign buying despite the tax = very strong conviction. Watch for this as sentiment signal.
+- **Rental yield floor:** historically SG private residential yields 2.5-3.5% gross. When yield compresses below 2.5%, prices are running ahead of fundamentals.
+
+## Historical episodes (SG-specific)
+- **1996-1998:** Asian Financial Crisis. Prices fell 40-45% peak to trough. Took 10 years to recover.
+- **2003:** SARS. Sharp but short. V-shaped recovery within 18 months.
+- **2007-2009:** GFC. Prices fell ~25%. Recovered faster than 1998 due to government stimulus.
+- **2011-2013:** Post-GFC boom. ABSD introduced Dec 2011 to cool foreign demand.
+- **2018:** ABSD hike (SC from 7% to 12%, foreigners from 15% to 20%). Volume fell 30%, prices flat.
+- **2022-2023:** ABSD hike again (foreigners to 60%). Current regime.
+- **2020:** COVID. Prices barely dipped — government support + low rates + limited supply.
 
 ## Sessions
 [Add notes after each market discussion — date, what was discussed, what the data showed]
