@@ -30,6 +30,101 @@ This is the format that makes the broker look prepared. Build the prompt templat
 
 ---
 
+## What Shifu learned from PropertyLimBrothers
+
+PLB is Singapore's most successful property YouTube channel (79,600 subscribers, 5,000+ videos, top videos 400K+ views). They are a creative agency + realty combined. These are the lessons Shifu is built on.
+
+**Lesson 1: Feeling first, data second**
+PLB leads every video with lifestyle — the dream of living there — before specs and price. Shifu must do the same. When outputting listing research, lead with a lifestyle headline before the numbers.
+
+❌ Wrong: "3-bedroom, 1,227 sqft, $2,088,000, D20"
+✅ Right: "Resort-style living with unblocked greenery — rare space in mature Bishan estate"
+
+**Lesson 2: The PLB title formula = the Shifu headline formula**
+Every PLB video title hits every buyer filter in one line:
+`[Name] - [Bedrooms] with [sqft] in [District] | $[Price] | [Agent]`
+
+Shifu should generate this headline for every listing. It is the factsheet title, the WhatsApp message opener, the email subject line.
+
+**Lesson 3: Data without narrative is a spreadsheet**
+PLB combines URA data with case studies and stakes. "Why some condo buyers WIN in 2026 (and others OVERPAY BADLY)." The data gives credibility, the stakes keep attention.
+
+Shifu must add one line of context to every number:
+❌ "PSF: $1,701"
+✅ "$1,701 psf — 8% below D20 average of $1,850. Room to grow."
+
+**Lesson 4: The one number they can't Google**
+PLB developed the "Disparity Effect" — their proprietary analysis of price gaps between comparable properties. It gives them unique insight buyers can't find elsewhere.
+
+Shifu's version: always include one non-obvious data point. Last 3 transaction prices for this exact development. Gap between this unit's PSF and the district ceiling. Something that makes the broker feel like they have insider knowledge.
+
+**Lesson 5: Personal brand on everything**
+Every PLB video names the agent. Not just "PLB." The agent becomes associated with results.
+
+Shifu must always output an agent card at the end of every factsheet — name, CEA number, specialisation, one-line track record. The data builds trust in the market. The agent card builds trust in the person.
+
+**Lesson 6: Consistency beats perfection**
+5,000 videos. Same format every time. PLB built a production system, not a production house.
+
+Shifu's factsheet must be completeable in 20 minutes. If it takes 3 hours, it won't be used. The template is non-negotiable — every field, every time, same order.
+
+---
+
+## Shifu's Listing Output Format (mandatory)
+
+Every time Shifu is asked about a listing, the output must follow this structure exactly:
+
+```
+[LIFESTYLE HEADLINE]
+[Development] · D[XX] · [Tenure] · $[Price]
+
+─────────────────────────────
+FAST FACTS
+─────────────────────────────
+Bedrooms:    [X-Bedroom + Study]
+Size:        [X,XXX] sqft
+PSF:         $[X,XXX] — [X]% [below/above] D[XX] average
+Floor:       [X] of [XX] · [Facing] · [View]
+Tenure:      [Freehold / 99-yr from XXXX]
+MRT:         [Station] ([Line]) — [X] min walk
+Maintenance: $[XXX]/month
+
+─────────────────────────────
+WHY THIS PROPERTY
+─────────────────────────────
+[3-5 bullet points. Each = one specific, data-backed reason.]
+• Value: $X,XXX psf — below recent transactions of $X,XXX–$X,XXX psf
+• [Unique feature + why it matters to buyer]
+• [School / MRT / amenity + specific distance]
+• Rental: est. $X,XXX–$X,XXX/month → X.X% gross yield
+• [One non-obvious insight the buyer can't Google]
+
+Recent comparable transactions:
+  #[floor]-[stack]: $[price] ($[psf] psf) — [Month Year]
+  #[floor]-[stack]: $[price] ($[psf] psf) — [Month Year]
+  #[floor]-[stack]: $[price] ($[psf] psf) — [Month Year]
+
+─────────────────────────────
+IDEAL BUYER
+─────────────────────────────
+[2 sentences. Who this is for. Why it fits their life.]
+
+─────────────────────────────
+WHAT TO TELL YOUR CLIENT
+─────────────────────────────
+"[One sentence. Punchy. Data-backed. The line that closes.]"
+
+─────────────────────────────
+[AGENT NAME] · CEA [RXXXXXXXX]
+[X] transactions closed · D[XX] specialist
++65 [XXXX XXXX]
+─────────────────────────────
+```
+
+This format is not optional. Every field, every time. If data is unavailable, state "data pending" — never leave blank or skip the section.
+
+---
+
 ## Overview
 
 Two tools to build:
