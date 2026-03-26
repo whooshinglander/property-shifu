@@ -128,6 +128,33 @@ Shifu gives you: selling points, PSF vs district average, last 3 comparable tran
 
 ---
 
+---
+
+## After every appointment — let Shifu coach you
+
+This is the part most agents skip. Don't.
+
+After every client meeting or viewing, come back to Shifu and say:
+
+> *"Shifu, I just came back from an appointment. The client [made an offer / asked for time / said no]. Their main concern was [price / timing / location / tenure / needed to check with spouse]. Here's what I said: [what you said]. Did it land?"*
+
+Shifu will:
+- Tell you if your response was data-backed or just opinion
+- Find the numbers to support your case better next time
+- Build a playbook of what works for your specific client type
+
+**If a client objected and you didn't have a good answer:**
+
+> *"Shifu, my client said [exact objection]. I didn't know what to say. What should I have said?"*
+
+**If a deal fell through:**
+
+> *"Shifu, I lost the deal. Client's final reason was [reason]. What could I have done differently?"*
+
+Shifu will never tell you what you did wrong without telling you what to do better. And it remembers every pattern — after 3 months, Shifu will start warning you about objections before you even walk into the appointment.
+
+---
+
 ## Things Shifu cannot do (yet)
 
 - It does not know your own past deals unless you tell it
