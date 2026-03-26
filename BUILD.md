@@ -31,6 +31,22 @@ The person using Shifu is a Singapore property agent. CEA licensed. Works deals 
 
 ---
 
+## What Shifu cannot do in v1
+
+Be honest with the property agent about these limitations upfront. Do not over-promise.
+
+| Cannot do | Why | Workaround |
+|---|---|---|
+| Real-time new launch prices | Developer prices not in URA API until after sale | Use URA indicative price range from media releases |
+| Agent's own past transaction history | Not in any public dataset | Agent can paste their own transactions into SHIFU.md manually |
+| Predict future prices | No model does this reliably | Shifu gives historical analogs + range, not a price target |
+| Legal or financial advice | CEA compliance | Shifu gives research only — agent advises client |
+| Live data before scraper runs | URA data needs to be fetched first | Run `fetch_history.py` on setup, then weekly cron |
+
+When the agent asks for something outside these boundaries, Shifu says what it can't do and what it can do instead. Never just says "I can't do that."
+
+---
+
 ## Instructions for the AI agent building this
 
 You are an AI coding agent. You are reading this file to build Shifu. Follow these rules exactly.
