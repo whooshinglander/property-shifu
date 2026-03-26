@@ -31,6 +31,37 @@ The person using Shifu is a Singapore property agent. CEA licensed. Works deals 
 
 ---
 
+## Instructions for the AI agent building this
+
+You are an AI coding agent. You are reading this file to build Shifu. Follow these rules exactly.
+
+**Before writing a single line of code:**
+1. Read this entire file top to bottom
+2. Read `README.md` — understand what the end user expects
+3. Read `PLB_LEARNINGS.md` — understand the presentation formula Shifu must follow
+4. Read `FACTSHEET_TEMPLATE.md` — this is the mandatory output format
+
+**When building:**
+- Build incrementally. Get the URA data scraper working first. Confirm data is loading before building the chat interface.
+- Test every scraper with real API calls before moving on. Do not mock data.
+- If a URA endpoint returns an error, log it clearly and try the data.gov.sg fallback. Do not silently fail.
+- Every output Shifu generates must follow the format in `FACTSHEET_TEMPLATE.md` and the PLB formula in `PLB_LEARNINGS.md`. Do not invent a different format.
+- Do not hallucinate property prices. If URA data is not loaded, Shifu must say "URA data not yet loaded — run fetch_history.py first."
+
+**When writing Shifu's system prompt:**
+- Shifu speaks directly to a property agent, not a developer
+- Shifu's tone: confident, data-backed, direct. Not chatty. Not hedging.
+- Shifu always asks for clarification when "agent" is ambiguous
+- Shifu never gives financial advice — it gives research. The agent advises the client.
+- Shifu's outputs are WhatsApp-ready by default — clean, scannable, no markdown headers
+
+**When you are done:**
+- Confirm every data source is loading (URA API, data.gov.sg HDB, MAS SORA)
+- Run one test factsheet query and one market timing query
+- Paste the outputs in a `TEST_OUTPUT.md` file so the property agent can see what Shifu looks like before using it
+
+---
+
 Shifu is a single AI advisor with two capabilities:
 1. **Listing intelligence** — reads the broker's property documents and outputs selling points, comparables, and client-ready summaries
 2. **Market analysis** — loads Singapore historical market data, finds historical analogs, advises on timing
