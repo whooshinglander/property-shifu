@@ -1,100 +1,134 @@
 # Shifu
-### Your AI property advisor. Built for Singapore brokers.
+### Your AI property advisor. Built for YOU.
+### It will show your client that you are the best property broker and they have to choose you.
 
 Shifu knows two things:
 
-1. **Your listings** — ask it anything about any property in your portfolio
+1. **Your listings** — ask it anything about any property and it will give you the selling points, the research
 2. **The market** — ask it whether now is a good time to buy, sell, or wait
 
 ---
 
-## What Shifu can do
+## What Shifu does for you
 
-**About your listings:**
-> *"Does The Riverina allow pets?"*
-> *"What's the maintenance fee at Grandeur 8?"*
-> *"Show me all 3-bedroom units under $2.5M in D20"*
+**Before a client meeting:**
+> *"Tell me the selling points of The Riverina in D18"*
 
-Shifu reads all your brochures, factsheets, and listing documents — and answers instantly.
+Shifu reads your listing documents and comes back with:
+- The strongest selling points ranked by buyer appeal
+- Price vs district average (is it good value?)
+- Recent comparable transactions
+- Estimated rental yield
+- Who this property is ideal for
 
----
-
-**About the market:**
-> *"Is D15 a good buy right now?"*
-> *"How does this market compare to 2018?"*
-> *"Volume is down but prices are flat — what does history say?"*
-
-Shifu loads 20+ years of URA and HDB data, finds the historical periods that looked most like today, and tells you what happened to prices in the 6 and 12 months that followed.
+You walk into the meeting sounding like you've spent hours researching. You spent 2 minutes.
 
 ---
 
-## Example
+**When a client asks about timing:**
+> *"My client wants to buy in D15. Is now a good time?"*
 
-You ask: *"D14 prices are up 5% this year but volume is dropping. Should my client buy now or wait?"*
+Shifu pulls 20+ years of Singapore market data, finds the historical periods that looked most like today, and tells you what happened to prices next. You give your client data-backed advice that most brokers can't.
+
+---
+
+## Example — Listing research
+
+You ask: *"Give me the selling points for Grandeur 8, 3-bedroom, $2,088,000"*
 
 Shifu answers:
-
 ```
-Shifu — Singapore Property | March 2026
+GRANDEUR 8 — Selling Points for Client Presentation
 
-Current conditions match 3 historical periods:
+HEADLINE: Spacious 3+Study in mature D20 estate, priced below recent transactions
 
-  #1 | Q3 2018  [94% match]
-     Prices +5.1% YoY, volume -12%, mortgage 2.1%
-     → What happened: prices drifted -3.8% over the next 12 months
-     → Context: ABSD hike followed 3 months later
+TOP SELLING POINTS:
+1. Value: $1,701 psf — 8% below D20 average of $1,850 psf
+2. Space: 1,227 sqft — rare size for this price in D20
+3. Location: Bishan MRT 8 min walk (Circle + North-South lines)
+4. Schools: Raffles Institution, Catholic High within 1km
+5. Rental upside: estimated $4,200–$4,500/month (2.5% yield)
 
-  #2 | Q2 2014  [89% match]  
-     Prices +3.8% YoY, volume -9%, mortgage 1.8%
-     → What happened: prices flat at +0.4% over 12 months
-     → Context: cooling measures already in place, market found floor
+RECENT COMPARABLE SALES:
+- #08-12: $2,050,000 ($1,671 psf) — Mar 2026
+- #11-14: $2,150,000 ($1,752 psf) — Jan 2026
+This unit priced below both — room to negotiate upward at resale.
 
-  #3 | Q1 2011  [85% match]
-     Prices +4.5% YoY, volume -6%, mortgage 1.5%
-     → What happened: prices continued +6.1% over 12 months
-     → Context: pre-ABSD, upgrader demand still strong
+IDEAL BUYER:
+HDB upgrader family with school-going children. 
+Bishan location = strong rental demand from expat families (MOE schools).
 
-2 out of 3 matches suggest caution. 1 suggests continued growth.
-Key variable: whether another cooling measure is coming.
+ONE-LINER FOR CLIENT:
+"Grandeur 8 is one of the last ways to get into Bishan below $1,750 psf — 
+every comparable unit has sold higher. The data supports the price."
 ```
-
-You decide what to advise. But now you're advising with data, not gut feel.
 
 ---
 
-## What you need to set up Shifu
+## Example — Market timing
 
-**For listing knowledge:**
-- Your property brochures and factsheets (PDF)
-- Drop them in a folder — Shifu reads them all
+You ask: *"D14 prices up 5% this year, volume dropping. Should my client buy now or wait?"*
+
+Shifu answers:
+```
+Singapore Property Market — D14 Analysis | March 2026
+
+This market matches 3 historical periods:
+
+  #1 | Q3 2018  [94% match]
+     Prices +5.1% YoY, volume -12%
+     → Prices 12 months later: -3.8%
+     → What happened: ABSD hike followed 3 months after
+
+  #2 | Q2 2014  [89% match]
+     Prices +3.8% YoY, volume -9%
+     → Prices 12 months later: flat (+0.4%)
+     → What happened: cooling measures held, market found floor
+
+  #3 | Q1 2011  [85% match]
+     Prices +4.5% YoY, volume -6%
+     → Prices 12 months later: +6.1%
+     → What happened: pre-ABSD, upgrader demand pushed prices higher
+
+SHIFU'S READ:
+2 of 3 matches = caution. Watch for cooling measure signals.
+If no new ABSD in next 3 months, the 2011 scenario becomes more likely.
+```
+
+Your client sees you've done the research. No other broker is walking in with this.
+
+---
+
+## What you need
+
+**For listing research (immediate value):**
+- Your property brochures and factsheets as PDF files
+- Drop them in a folder, Shifu reads them all
 
 **For market analysis:**
-- URA price index data (free at ura.gov.sg/reis)
-- HDB resale data (free at data.gov.sg)
-- Your developer will handle the rest
+- URA price index data (free — ura.gov.sg/reis)
+- HDB resale data (free — data.gov.sg)
 
 ---
 
 ## Getting started
 
-Send this repo to your developer or AI agent. The file `AGENT.md` has everything they need.
+Send this repo to your developer or AI agent. The file `AGENT.md` has complete build instructions.
 
-You don't need to understand the code. You just need to:
+**Your job:**
 1. Collect your listing PDFs
-2. Download the URA/HDB data files
-3. Hand both to your developer with `AGENT.md`
+2. Download the URA/HDB CSV files
+3. Hand everything to your developer with `AGENT.md`
 
-Once set up, you talk to Shifu. That's it.
-
----
-
-## The Shifu memory file
-
-After each conversation, Shifu's memory file (`SHIFU.md`) is updated with what was discussed and what the data showed. Next time you ask, Shifu already knows the context.
-
-Over time, Shifu gets smarter about your specific market, your typical client profile, and the patterns you've noticed in your own deals.
+Once Shifu is running, you just talk to it.
 
 ---
 
-*Built on open-source tools. Singapore data. Free to run.*
-*Inspired by PropertyLimBrothers' formula: data + story + personal brand.*
+## Shifu gets smarter over time
+
+Every conversation is saved to `SHIFU.md` — Shifu's memory. Next session it already knows your market, your typical client, the properties you've discussed. The longer you use it, the sharper it gets.
+
+---
+
+*Built on open-source Python. Singapore data (URA, HDB, MAS). Free to run.*
+*Presentation formula inspired by PropertyLimBrothers.*

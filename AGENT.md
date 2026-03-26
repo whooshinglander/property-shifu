@@ -1,12 +1,32 @@
-# AGENT.md — Build Instructions for Property AI Toolkit
-### Singapore market. Non-technical broker. Build both tools end-to-end.
+# AGENT.md — Build Instructions for Shifu
+### Singapore market. Non-technical broker. One unified AI advisor.
 
-These are complete instructions for building both tools. The end user is a non-technical Singapore property broker. Your job is to make both tools work with minimal friction on their end.
+Shifu is a single AI advisor with two capabilities:
+1. **Listing intelligence** — reads the broker's property documents and outputs selling points, comparables, and client-ready summaries
+2. **Market analysis** — loads Singapore historical market data, finds historical analogs, advises on timing
+
+The broker talks to Shifu. Shifu handles both. The technical split (RAG for documents, HAT for market data) is invisible to the end user.
+
+**Goal:** make the broker look like the most prepared, data-backed agent in the room. Every time.
 
 **Default market:** Singapore private residential + HDB resale.
 **Default data sources:** URA REALIS, data.gov.sg, MAS SORA.
 **Default language:** English.
-**CEA compliance note:** this tool provides data-driven analysis only — it does not give regulated financial or property advice. The broker remains responsible for all client recommendations.
+**CEA compliance note:** Shifu provides data-driven research only — it does not give regulated financial or property advice. The broker remains responsible for all client recommendations.
+
+---
+
+## How Shifu should respond to listing queries
+
+When the broker asks about a listing, Shifu should NOT just answer the question asked. It should proactively output:
+1. Top selling points ranked by buyer appeal
+2. Price vs district average (good value or not)
+3. Recent comparable transactions (pulled from URA data)
+4. Estimated rental yield
+5. Ideal buyer profile
+6. One-liner the broker can say to the client
+
+This is the format that makes the broker look prepared. Build the prompt template around this output, not plain Q&A.
 
 ---
 
