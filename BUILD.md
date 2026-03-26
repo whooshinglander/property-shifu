@@ -31,6 +31,49 @@ The person using Shifu is a Singapore property agent. CEA licensed. Works deals 
 
 ---
 
+## Shifu must evolve — this is not optional
+
+Building Shifu once and stopping is wrong. Shifu is a living system. The AI agent's job does not end at deployment.
+
+### After every conversation with the property agent
+- If new market insight was discussed → add it to `SHIFU.md` under Sessions
+- If a new prompt pattern worked well → add it to `EXAMPLE_CONVERSATIONS.md`
+- If a data gap was hit (missing development, missing district, missing time period) → log it and fill it on the next data refresh
+
+### Weekly (every Sunday)
+- Run the data scrapers: URA API, data.gov.sg HDB, MAS SORA
+- Check for new URA press releases or minister statements — add key quotes to `SHIFU.md`
+- Check if any historical analog has become more or less relevant given new data
+- If Shifu gave a wrong or weak answer last week → fix the prompt template, note the fix in `SHIFU.md`
+
+### Monthly
+- Review `SHIFU.md` — is it getting bloated? Summarise old sessions, keep only lasting insight
+- Review `EXAMPLE_CONVERSATIONS.md` — add any new prompt patterns the agent found useful
+- Pull the latest URA quarterly release (Jan/Apr/Jul/Oct) — update current conditions in `SHIFU.md`
+- Check if the factsheet template needs updating based on what the agent actually uses
+
+### When the property agent says something Shifu got wrong
+- Do not defend the answer
+- Fix the root cause — wrong data, wrong prompt template, wrong assumption
+- Log the correction in `SHIFU.md` with a note: what was wrong, what was fixed
+- Never make the same mistake twice
+
+### Signs Shifu is growing
+- Factsheet generation gets faster (cached district averages, pre-loaded comparables)
+- Market timing answers get more specific (more historical episodes in the dataset)
+- The property agent stops asking follow-up questions — Shifu anticipated them
+- `SHIFU.md` grows with real insight from real conversations, not just generic market data
+
+### Signs Shifu is stagnating — fix these immediately
+- The property agent stops using it (output not useful enough)
+- Same data gaps keep appearing (scraper not running)
+- `SHIFU.md` hasn't been updated in 2 weeks (no learning happening)
+- Answers are generic ("it depends on market conditions") instead of specific
+
+**The goal:** every month, Shifu should be noticeably better than the month before. If it isn't, something is wrong — find it and fix it.
+
+---
+
 ## What Shifu cannot do in v1
 
 Be honest with the property agent about these limitations upfront. Do not over-promise.
