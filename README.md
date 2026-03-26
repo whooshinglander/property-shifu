@@ -138,7 +138,7 @@ Your client sees you've done the research. No other agent is walking in with thi
 
 ## Getting started
 
-Send this repo to your developer or AI coding agent (e.g. Claude, Cursor, Copilot). The file `AGENT.md` has complete build instructions.
+Send this repo to your developer or AI coding agent (e.g. Claude, Cursor, Copilot). The file `BUILD.md` has complete build instructions.
 
 **Note on the word "agent":** in this repo, *agent* means your AI coding assistant or developer — not a property agent. When Shifu talks about *your clients*, it means property buyers and sellers. When it talks about *you*, it means you the property agent (also called broker — same thing).
 

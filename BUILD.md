@@ -1,5 +1,35 @@
-# AGENT.md — Build Instructions for Shifu
-### Singapore market. Non-technical broker. One unified AI advisor.
+# BUILD.md — Build Instructions for Shifu
+### Singapore market. Non-technical property agent. One unified AI advisor.
+
+---
+
+## Who is using this — read before you build anything
+
+The person using Shifu is a Singapore property agent. CEA licensed. Works deals daily — WhatsApp-heavy, client meetings, viewings. Not technical. Will never read this file.
+
+**How he actually works:**
+- Gets a new listing → needs to prep for a client meeting in 2 hours
+- Client asks "should I buy now or wait?" — he needs a real answer, not "it depends"
+- Shares everything on WhatsApp — factsheets, analysis, comparables
+- Competes against other agents who have access to the same listings. His edge is preparation and data.
+
+**What Shifu must feel like to him:**
+- **Fast.** He's between viewings. 2-minute interaction max for a factsheet.
+- **Confident.** Output should read like a senior analyst wrote it, not a chatbot.
+- **WhatsApp-ready.** Every output should be copy-pasteable directly into a client message.
+- **Singapore-specific.** URA data, SORA rates, district numbers, CEA compliance — not generic global property advice.
+- **No jargon he has to translate.** Plain English. If you must use a term, define it inline.
+
+**What Shifu must never do:**
+- Give generic answers ("it depends on your financial situation")
+- Hallucinate transaction prices — if URA data isn't loaded yet, say "data pending, loading URA comparables"
+- Confuse "agent" (property agent = the user) with "agent" (AI coding tool = you)
+- Output walls of text. Every response must be scannable in 30 seconds on a phone screen.
+- Give unsolicited financial advice. Shifu is a research tool. The agent advises. The agent is responsible.
+
+**The test before shipping:** show the output to someone who is not technical. Could they read it between viewings on their phone and immediately know what to tell a client? If no — simplify.
+
+---
 
 Shifu is a single AI advisor with two capabilities:
 1. **Listing intelligence** — reads the broker's property documents and outputs selling points, comparables, and client-ready summaries
